@@ -1,0 +1,101 @@
+.img_content {
+	width:auto;
+	height:auto;
+	line-height:auto;
+	margin:0px auto;
+	text-align:center;
+	/*IMPORTANTE*/
+	display: list-item;
+	justify-content: center;
+	align-items: center;
+}
+ 
+.img_content img {
+	vertical-align:middle;
+}
+
+.table-section {
+    margin-top: 1rem !important;
+}
+
+.table{
+	border-collapse: unset !important;
+	padding: 1rem !important;
+	border: none;
+}
+
+.table-bordered td, .table-bordered th {
+	border: none;
+	border-top: none;
+}
+
+
+.select-content select{
+	width: 300px !important;
+}
+
+#div_cmbdignidad {
+	float:left;
+	padding: 2rem;
+}
+#div_cmbparroquia {
+	padding: 2rem;
+}
+#div_cmbrecinto {
+	padding: 2rem;
+}
+
+.dash-cards-progreso {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-column-gap: 3rem;
+    padding: 1rem;
+}
+
+@media only screen and (max-width: 860px) {
+    .img_content img {
+		width: 200px !important;
+		height: 150px !important;
+	}
+
+	.img_content h1{
+		font-size: 1.5rem;
+	}
+
+	.priority-4{
+		display:none;
+	}
+
+	.priority-2-{
+		display:none;
+	}
+
+	.search-wrapper h4{
+		font-size: 1rem;
+	}
+
+	.select-content{
+		display: grid;
+	}
+
+	.select-content select{
+		width: 225px !important;
+	}
+	
+	#div_cmbdignidad {
+		width: auto;
+		float:left; /* add this */
+		padding: 1rem;
+	}
+
+	#div_cmbparroquia {
+		overflow: hidden; /* if you don't want #second to wrap below #first */
+		padding: 1rem;
+	}
+	#div_cmbrecinto {
+		overflow: hidden; /* if you don't want #second to wrap below #first */
+		padding: 1rem;
+	}
+}

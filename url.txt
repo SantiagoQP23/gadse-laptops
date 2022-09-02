@@ -1,0 +1,12 @@
+var URL_CARGA_CANTON = "http://128.201.163.185:8080/wsRegistro/api/v1/services/cantones";
+var URL_CARGA_PARR = "http://128.201.163.185:8080/wsRegistro/api/v1/services/parroquias";
+var URL_CARGA_COMU = "http://128.201.163.185:8080/wsRegistro/api/v1/services/comunas";
+var URL_PARR = "http://128.201.163.185:8080/wsRegistro/api/v1/services/parr";
+var URL_PARRINST = "http://128.201.163.185:8080/wsRegistro/api/v1/services/parrinst";
+var URL_GUARDAR = "http://128.201.163.185:8080/wsRegistro/api/v1/services/registroTotal";
+var URL_GUARDAR_EST = "http://128.201.163.185:8080/wsRegistro/api/v1/services/registroEst";
+var URL_CARGA_REPRE = "http://128.201.163.185:8080/wsRegistro/api/v1/services/repre";
+var URL_CARGA_EST = "http://128.201.163.185:8080/wsRegistro/api/v1/services/est";
+
+
+0917249302
