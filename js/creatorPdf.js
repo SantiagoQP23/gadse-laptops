@@ -44,8 +44,6 @@ function table(data, columns) {
 
 generarPdf = (representantes, institucion) => {
 
-  console.log("Generando pdf")
-  console.log(institucion)
   var dd = {
     content: [
       { text: institucion, style: 'header', alignment: 'center', },

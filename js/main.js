@@ -1,3 +1,67 @@
+const BASE_URL = 'http://128.201.163.185:8080/wsRegistro/api/v1/services/';
+
+
+/* 
+  .then(function (response) {
+            return response.arrayBuffer();
+        })
+        .then(function (buffer) {
+            const decoder = new TextDecoder('iso-8859-1');
+            const text = decoder.decode(buffer);
+            console.log(text);
+            */
+
+// const obtenerDatos = async (url) => {
+//   try {
+//     const resp = await fetch(BASE_URL + url, {
+//       headers: {
+//         //'Accept': 'application/json',
+//         //'Content-Type': 'application/json'
+//         //'Content-Type': 'json',
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//         //'Content-Type': 'text/plain; charset=ISO-8859-1',
+//       }
+
+//     }
+//     );
+
+//     const body = resp.json();    
+
+
+
+//     return body;
+//   } catch (error) {
+//     return false;
+//   }
+// }
+
+const obtenerDatos = async (url) => {
+  const data = $.ajax({
+    type: "GET",
+    url: BASE_URL + url, 
+    dataType: "json",
+    success: function(data){
+      return data;
+      
+    },
+    error: function(data) {
+      //alert('error');
+    },
+    complete: function () {
+   
+    }
+  });
+  return data;
+}
+
+
+const alertaHtml = (mensaje) => {
+  const alerta = `<div class="alert alert-danger" role="alert">
+      ${mensaje}
+    </div>`;
+
+  return alerta;
+}
 
 
 
@@ -9,32 +73,25 @@ const buscarRepresentante = async (e) => {
 
     const cargando = document.querySelector('#cargando-representante');
 
-    cargando.classList.remove('ocultar');
-
-
     const cedula = document.querySelector('#cedula').value;
 
-
     let cardRepresentante = '';
-    const alerta = `<div class="alert alert-danger" role="alert">
-      No se encontro al representante
-      </div>`
+
     const seccionDatos = document.querySelector('#datos-representante');
+
     seccionDatos.innerHTML = '';
 
     try {
-      const resp = await fetch(`http://128.201.163.185:8080/wsRegistro/api/v1/services/repre?ced=${cedula}`);
-      const body = await resp.json();
+      cargando.classList.remove('ocultar');
 
+      body = await obtenerDatos(`repre?ced=${cedula}`);
 
       const repre = body[0];
-      console.log(repre)
+
       var imagenCro = new Image();
       imagenCro.src = repre.REPRE_FOT_CRO;
       var image = new Image();
       image.src = repre.REPRE_FOT_DOM;
-
-
 
       cardRepresentante = ` 
       <div class="card">
@@ -61,15 +118,13 @@ const buscarRepresentante = async (e) => {
           </div>`;
 
 
-
-
-
       cargando.classList.add('ocultar');
       seccionDatos.innerHTML = cardRepresentante;
-      return;
 
     } catch (error) {
-      seccionDatos.innerHTML = alerta;
+
+
+      seccionDatos.innerHTML = alertaHtml('No se encontro al representante');
       cargando.classList.add('ocultar');
 
     }
@@ -82,45 +137,24 @@ const buscarRepresentante = async (e) => {
 
 
 
-const obtenerCantones = async () => {
-
-  const resp = await fetch('http://128.201.163.185:8080/wsRegistro/api/v1/services/cantones');
-  const body = await resp.json();
-  return body;
-}
-
 const mostrarCantones = async () => {
-  const data = await obtenerCantones();
-  const selectCantones = document.querySelector('#select-cantones')
+
+  const data = await obtenerDatos('cantones');
+   await obtenerDatos ('cantones');
+  const selectCantones = document.querySelector('#select-cantones');
 
 
   data.forEach(canton => {
     selectCantones.innerHTML += `<option value="${canton.ID_CANTON}">${canton.CAN_DESCRIPCION}</option>`;
   });
 
-  const idCanton = data[0].ID_CANTON
+  const idCanton = data[0].ID_CANTON;
   selectCantones.value = idCanton;
 
   mostrarParroquias(idCanton);
 
-
-  // $(document).ready(function () {
-  //   $('#data-table-cantones').DataTable({
-  //     "data": data,
-  //     "columns": [
-  //       { "data": "CAN_DESCRIPCION" },
-  //       { "data": "ID_CANTON" },
-  //     ]
-  //   });
-  // });
-
 }
-const obtenerParroquias = async (idCanton) => {
 
-  const resp = await fetch(`http://128.201.163.185:8080/wsRegistro/api/v1/services/parroquias?canton=${idCanton}`);
-  const body = await resp.json();
-  return body;
-}
 
 const mostrarParroquias = async (idCanton) => {
 
@@ -128,12 +162,9 @@ const mostrarParroquias = async (idCanton) => {
 
   insertarComunas.disabled = true;
 
-
   insertarComunas.innerHTML = "";
 
-
-  const data = await obtenerParroquias(idCanton);
-
+  const data = await obtenerDatos(`parroquias?canton=${idCanton}`);
 
   const insertarParroquia = document.querySelector('#select-parroquias');
   insertarParroquia.disabled = false;
@@ -143,36 +174,18 @@ const mostrarParroquias = async (idCanton) => {
     insertarParroquia.innerHTML += `<option value="${parroquia.ID_PARROQUIA}">${parroquia.PARR_DESCRIP}</option>`;
 
   });
-  // $(document).ready(function () {
-  //   $('#data-table-parroquias').DataTable({
-  //     "data": data,
-  //     "columns": [
-  //       { "data": "PARR_DESCRIP" },
-  //       { "data": "ID_PARROQUIA" },
-  //     ]
-  //   });
-  // });
+
 
 }
 
-const obtenerComunas = async (idParroquia) => {
 
-  try {
-    const resp = await fetch(`http://128.201.163.185:8080/wsRegistro/api/v1/services/comunas?parroquia=${idParroquia}`);
-    const body = await resp.json();
-    return body;
-
-  } catch (error) {
-    return false;
-  }
-}
 
 const mostrarComunas = async (idParroquia) => {
 
   const insertarComunas = document.querySelector('#select-comunas');
 
 
-  const data = await obtenerComunas(idParroquia);
+  const data = await obtenerDatos(`comunas?parroquia=${idParroquia}`);
 
   if (!data) {
     insertarComunas.disabled = true;
@@ -187,129 +200,9 @@ const mostrarComunas = async (idParroquia) => {
 
   });
 
-  // $(document).ready(function () {
-  //   $('#data-table-comunas').DataTable({
-  //     "data": data,
-  //     "columns": [
-  //       { "data": "COM_DESCRIP" },
-  //       { "data": "ID_COMUNA" },
-  //     ]
-  //   });
-  // });
-
-}
-
-
-const obtenerInstituciones = async (idParroquia) => {
-
-  // selecciona el elemento
-
-
-  try {
-
-
-
-    const resp = await fetch(`http://128.201.163.185:8080/wsRegistro/api/v1/services/parrinst?parroquia=${idParroquia}`);
-    const body = await resp.json();
-
-    return body;
-
-
-
-
-  } catch (error) {
-
-    return false;
-  }
-
-}
-
-
-const obtenerRepresentantes = async (idInstitucion) => {
-
-  const alerta = `
-  <div class="alert alert-danger" role="alert">
-    No se han registrado representantes
-  </div>`;
-
-
-  const seccionDatos = document.querySelector(`#section-${idInstitucion}`);
-
-  try {
-    const resp = await fetch(`http://128.201.163.185:8080/wsRegistro/api/v1/services/repreins?inst=${idInstitucion}`);
-    const body = await resp.json();
-    return body;
-
-  } catch (error) {
-    seccionDatos.innerHTML = alerta;
-    return false;
-  }
 
 
 }
-
-/* 
- "CED_REPRE": "0922419239",
-        "REPRE_APELLIDO": "SANTISTEVAN ROSALES",
-        "REPRE_NOMBRE": "FRANKLIN STALIN ",
-        "PARR_DESCRIP": "Colonche"
-         */
-
-
-const mostrarRepresentantes = async (idInstitucion, institucion) => {
-  const data = await obtenerRepresentantes(idInstitucion);
-
-  const resp = await fetch('../js/idioma.json');
-
-  const configIdioma = await resp.json();
-
-  const btnGenerarPdf = document.querySelector(`#pdf-${idInstitucion}`);
-
-  console.log('INstitucion', institucion)
-
-  btnGenerarPdf.addEventListener('click', function () {
-
-    generarPdf(data, institucion);
-
-  });
-
-
-
-  $(document).ready(function () {
-    $(`#data-table-${idInstitucion}`).DataTable({
-      "data": data,
-      scrollX: true,
-      "columns": [
-        { "data": "CED_REPRE" },
-        { "data": "REPRE_APELLIDO" },
-        { "data": "REPRE_NOMBRE" },
-        { "data": "PARR_DESCRIP" },
-      ],
-      dom: 'Bfrtip',
-      buttons: [
-        {
-          text: 'Alert',
-          action: function (e, dt, node, config) {
-            alert('Activated!');
-            this.disable(); // disable button
-          },
-          className: 'btn btn-primary'
-
-        }
-
-      ],
-      retrieve: true,
-
-      "language": configIdioma
-
-
-    });
-  });
-
-
-
-}
-
 
 
 const mostrarInstituciones = async (idParroquia) => {
@@ -330,10 +223,7 @@ const mostrarInstituciones = async (idParroquia) => {
 `
 
 
-  const alerta = `
-  <div class="alert alert-danger" role="alert">
-    No se han registrado instituciones
-  </div>`;
+
 
   const accordionInstituciones = document.querySelector('#accordion-instituciones');
 
@@ -341,12 +231,10 @@ const mostrarInstituciones = async (idParroquia) => {
 
   accordionInstituciones.innerHTML = cargando;
 
-  const data = await obtenerInstituciones(idParroquia);
-
-
+  const data = await obtenerDatos(`parrinst?parroquia=${idParroquia}`);
 
   if (!data) {
-    accordionInstituciones.innerHTML = alerta;
+    accordionInstituciones.innerHTML = alertaHtml('No se han registrado instituciones');
     return;
   }
 
@@ -354,7 +242,6 @@ const mostrarInstituciones = async (idParroquia) => {
   accordionInstituciones.innerHTML = '';
 
   data.forEach(inst => {
-    console.log(inst);
     accordionInstituciones.innerHTML += `
     <div class="card">
     <div class="card-header d-flex justify-content-between" id="headingOne">
@@ -402,24 +289,62 @@ const mostrarInstituciones = async (idParroquia) => {
 
 }
 
-const cargarCantones = async () => {
 
-  const tabla = `
-  <section class="p-2">
-  
-  <table id="data-table-${inst.ID_INSTITUCION}" class="table ">
-  <thead>
-      <tr>
-        <th>Cedula</th>
-        <th>Nombres</th>
-        <th>Apellidos</th>
-        <th>Parroquia</th>
-      </tr>
-    </thead>
-    </table>
-    
-    </section> `;
+
+
+const mostrarRepresentantes = async (idInstitucion, institucion) => {
+
+
+  const data = await obtenerDatos(`repreins?inst=${idInstitucion}`);
+
+  if (!data) {
+    const seccionDatos = document.querySelector(`#section-${idInstitucion}`);
+
+    seccionDatos.innerHTML = alertaHtml('No se han registrado representantes');
+    return;
+  }
+
+  const resp = await fetch('../js/idioma.json');
+
+  const configIdioma = await resp.json();
+
+  const btnGenerarPdf = document.querySelector(`#pdf-${idInstitucion}`);
+
+
+  btnGenerarPdf.addEventListener('click', function () {
+
+    generarPdf(data, institucion);
+
+  });
+
+
+
+
+  $(`#data-table-${idInstitucion}`).DataTable({
+    "data": data,
+    scrollX: true,
+    "columns": [
+      { "data": "CED_REPRE" },
+      { "data": "REPRE_APELLIDO" },
+      { "data": "REPRE_NOMBRE" },
+      { "data": "PARR_DESCRIP" },
+    ],
+
+
+    retrieve: true,
+
+    "language": configIdioma
+
+
+  });
+
+
+
+
 }
+
+
+
 
 
 
@@ -427,10 +352,7 @@ const cargarCantones = async () => {
 document.body.onload = async function () {
 
   mostrarCantones();
-  /*  mostrarParroquias();
-   mostrarComunas(); 
-   mostrarInstituciones();
-   */
+
   buscarRepresentante();
 
 
