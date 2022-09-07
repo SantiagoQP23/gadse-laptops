@@ -38,17 +38,33 @@ const BASE_URL = 'http://128.201.163.185:8080/wsRegistro/api/v1/services/';
 const obtenerDatos = async (url) => {
   const data = $.ajax({
     type: "GET",
-    url: BASE_URL + url, 
+    url: BASE_URL + url,
     dataType: "json",
-    success: function(data){
+    async: true,
+    success: function (data) {
       return data;
-      
+
     },
-    error: function(data) {
+   
+  });
+  return data;
+}
+const obtenerDatosAjax = async (url) => {
+  const data = $.ajax({
+    type: "GET",
+    url: BASE_URL + url,
+    contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
+    //contentType: 'application/xml;charset=ISO-8859-1',
+    dataType: "json",
+    success: function (data) {
+      return data;
+
+    },
+    error: function (data) {
       //alert('error');
     },
     complete: function () {
-   
+
     }
   });
   return data;
@@ -64,83 +80,22 @@ const alertaHtml = (mensaje) => {
 }
 
 
-
-const buscarRepresentante = async (e) => {
-
-  document.querySelector('#btn-buscar').addEventListener("click", async function (event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    const cargando = document.querySelector('#cargando-representante');
-
-    const cedula = document.querySelector('#cedula').value;
-
-    let cardRepresentante = '';
-
-    const seccionDatos = document.querySelector('#datos-representante');
-
-    seccionDatos.innerHTML = '';
-
-    try {
-      cargando.classList.remove('ocultar');
-
-      body = await obtenerDatos(`repre?ced=${cedula}`);
-
-      const repre = body[0];
-
-      var imagenCro = new Image();
-      imagenCro.src = repre.REPRE_FOT_CRO;
-      var image = new Image();
-      image.src = repre.REPRE_FOT_DOM;
-
-      cardRepresentante = ` 
-      <div class="card">
-          <div class="row">
-          <div class="col-sm">
-              <img src=${image.src} width="100%" alt="Card image cap">
-              </div>
-              <div class="col-sm">
-              <img src=${imagenCro.src} width="100%" alt="Card image cap">
-          </div>
-        
-        </div>
-
-        <h5 class="card-title" style="padding: 20px 0 0 20px;">${repre.REPRE_APELLIDO} ${repre.REPRE_NOMBRE}</h5>
-        
-        <div class="card-body">
-          <ul class="list-group list-group-flush" style="width: 100%;">
-              <li class="list-group-item">Comuna: ${repre.REPRE_COMUNA}</li>
-              <li class="list-group-item">Barrio: ${repre.REPRE_BARRIO}</li>
-              <li class="list-group-item">Direccion: ${repre.REPRE_DIRECCION}</li>
-              <li class="list-group-item">Celular: ${repre.REPRE_CELL}</li>
-              </ul>
-            </div>
-          </div>`;
-
-
-      cargando.classList.add('ocultar');
-      seccionDatos.innerHTML = cardRepresentante;
-
-    } catch (error) {
-
-
-      seccionDatos.innerHTML = alertaHtml('No se encontro al representante');
-      cargando.classList.add('ocultar');
-
-    }
-
-
-  });
+const abrirImagen = (imagen) => {
+  var imagenCro = new Image();
+  imagenCro.src(imagen);
+  window.open(imagenCro, "_blank");
 
 
 }
 
 
 
+
+
 const mostrarCantones = async () => {
 
   const data = await obtenerDatos('cantones');
-   await obtenerDatos ('cantones');
+  await obtenerDatos('cantones');
   const selectCantones = document.querySelector('#select-cantones');
 
 
@@ -203,6 +158,14 @@ const mostrarComunas = async (idParroquia) => {
 
 
 }
+const obtenerComuna = async (idParroquia, idComuna) => {
+  const comunas = await obtenerDatos(`comunas?parroquia=${idParroquia}`);
+
+  console.log(comunas);
+  const comuna = comunas.find(com => com.ID_COMUNA === idComuna);
+  console.log(comuna)
+  return comuna;
+}
 
 
 const mostrarInstituciones = async (idParroquia) => {
@@ -262,6 +225,8 @@ const mostrarInstituciones = async (idParroquia) => {
             <section id="section-${inst.ID_INSTITUCION}" class="p-2">
             
             <button class="btn btn-primary" id="pdf-${inst.ID_INSTITUCION}">Generar pdf</button>
+            <button class="btn btn-primary" id="pdf-ins-${inst.ID_INSTITUCION}">Generar pdf institución</button>
+            
             
             
             <table id="data-table-${inst.ID_INSTITUCION}" class="table table-striped table-bordered dt-responsive nowrap" width="100%" >
@@ -295,9 +260,9 @@ const mostrarInstituciones = async (idParroquia) => {
 const mostrarRepresentantes = async (idInstitucion, institucion) => {
 
 
-  const data = await obtenerDatos(`repreins?inst=${idInstitucion}`);
+  const representantes = await obtenerDatos(`repreins?inst=${idInstitucion}`);
 
-  if (!data) {
+  if (!representantes) {
     const seccionDatos = document.querySelector(`#section-${idInstitucion}`);
 
     seccionDatos.innerHTML = alertaHtml('No se han registrado representantes');
@@ -313,7 +278,17 @@ const mostrarRepresentantes = async (idInstitucion, institucion) => {
 
   btnGenerarPdf.addEventListener('click', function () {
 
-    generarPdf(data, institucion);
+    generarPdf(representantes, institucion);
+
+  });
+  const btnGenerarPdfInstituciones = document.querySelector(`#pdf-ins-${idInstitucion}`);
+
+
+  btnGenerarPdfInstituciones.addEventListener('click', function () {
+
+    generarPdfRepresentantes(representantes, institucion);
+
+    //    generarPdfEstudiantes(representantes, institucion);
 
   });
 
@@ -321,7 +296,7 @@ const mostrarRepresentantes = async (idInstitucion, institucion) => {
 
 
   $(`#data-table-${idInstitucion}`).DataTable({
-    "data": data,
+    "data": representantes,
     scrollX: true,
     "columns": [
       { "data": "CED_REPRE" },
