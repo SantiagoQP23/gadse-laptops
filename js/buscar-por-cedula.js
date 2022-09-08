@@ -135,30 +135,85 @@ const buscarRepresentanteAjax = () => {
         <button class="btn btn-secondary" id="pdf-representante"><i class="bi bi-filetype-pdf"></i> PDF</button>
       </div>
     </section>
-      <div class="card">
-        <div class="d-flex justify-content-between p-3">
-          <h5  >
-          <i class="bi bi-person"></i>${repre.REPRE_APELLIDO} ${repre.REPRE_NOMBRE}
-          </h5>
-         
-        
-        </div>
-        
-        <div class="card">
-  <div class="card-body">
-  <b>Cédula: </b>${cedula}
-  </div>
-</div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush" style="width: 100%;">
-            <li class=""><b>Cédula: </b>${cedula}</li>
-            <li class=""><b>Comuna: </b>${comuna}</li>
-            <li class=""><b>Barrio: </b>${repre.REPRE_BARRIO}</li>
-            <li class=""><b>Direccion: </b>${repre.REPRE_DIRECCION}</li>
-            <li class=""><b>Celular: </b>${repre.REPRE_CELL}</li>
-          </ul>
-        </div>
+      <div class="card card-repre ">
+      <div class="col-sm-12 p-3">
+        <h5  >
+        <i class="bi bi-person"></i>${repre.REPRE_APELLIDO} ${repre.REPRE_NOMBRE}
+        </h5>
       </div>
+      <div class="card-body"> 
+      
+        <div class="row justify-content-center">
+          <div class="col-sm-6">
+            <div class="card ">
+              <div class="card-body card-prop ">
+                <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                  <i class="bi bi-file-person-fill"></i>
+                </div>
+                <div class="body-card-prop d-flex align-items-center">
+                  <p>
+                    <b class="text-prop">CÉDULA</b><br>
+                    ${cedula}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+              </div>
+              <div class="col-sm-6">
+                <div class="card card-prop">
+                  <div class="card-body div-card d-flex align-items-center">
+                  <p>
+                    <label  class="text-prop"><b>CELULAR</b> </label><br>
+                    <label>${repre.REPRE_CELL}</label>
+                  </p>
+                  </div>
+                </div>
+              
+              
+              </div>
+              <div class="col-sm-6">
+                <div class="card card-prop">
+                  <div class="card-body div-card">
+                    <p>
+                    <b class="text-prop">COMUNA</b><br>
+                    ${comuna}
+                    </p>
+                  </div>
+                </div>
+              
+              </div>
+              
+              <div class="col-sm-6">
+              <div class="card card-prop">
+                <div class="card-body div-card">
+                  <p>
+                    <b class="text-prop">BARRIO</b><br>
+                    ${repre.REPRE_BARRIO}
+                  </p>
+                </div>
+              </div>
+
+              </div>
+              <div class="col-sm-12">
+                <div class="card card-prop">
+                  <div class="card-body div-card">
+                    <p>
+                      <b class="text-prop">DIRECCION</b><br>
+                      ${repre.REPRE_DIRECCION}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          
+      </div>
+              
+
+
 
       <section class="py-3 border-bottom" style="margin-bottom:15px !important">
       <div class="container">
@@ -199,7 +254,7 @@ const buscarRepresentanteAjax = () => {
 
 
         <div class="col-12 col-sm-6">
-          <div class="card" >
+          <div class="card bg-warning">
             <div class="card-header">Croquis</div>
             <img class="rounded" src=${imagenCro.src}
             title="Croquis"
