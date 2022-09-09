@@ -491,52 +491,88 @@ form{
   display: none;
 }
 
-
-.card-repre{
-  border: none !important;
- /*  box-shadow: 0px 0px 11px 3px rgba(202,202,217,0.9);
-  -webkit-box-shadow: 0px 0px 11px 3px rgba(202,202,217,0.9);
-  -moz-box-shadow: 0px 0px 11px 3px rgba(202,202,217,0.9); */
-}
-
 .card{
 
   border: none !important;
 }
 
+.icon-card{
+  font-size: 35px !important;
+  
+  margin-right: 10px;
+
+  /* border-left: 3px solid yellow !important; */
+  
+  /* background-color: #ffdd009f !important; */
+ /*  box-shadow: 0px 0px 11px 3px rgba(202,202,217,0.9);
+  -webkit-box-shadow: 0px 0px 11px 3px rgba(202,202,217,0.9);
+  -moz-box-shadow: 0px 0px 11px 3px rgba(202,202,217,0.9); */
+}
+
+.card-body-repre{
+  padding: 0 15px !important;
+}
+
 .card-prop{
   
-  background-color: transparent !important;
-  border: 1px solid #f6ff00 !important;
   border-radius: 10px !important;
- /*  box-shadow: 8px 9px 9px -7px rgba(218,255,0,0.62);
+  color: green;
+  background-color: #f1f5f9 !important;
+  padding: 0 !important;
+  /* box-shadow: 8px 9px 9px -7px rgba(218,255,0,0.62);
   -webkit-box-shadow: 8px 9px 9px -7px rgba(218,255,0,0.62);
   -moz-box-shadow: 8px 9px 9px -7px rgba(218,255,0,0.62); */
  
 
-  padding: 0 10px !important;
+  /* padding: 0 10px !important; */
+  margin-bottom: 10px;
+  max-width: 100% !important;
+  display: block;
   
 }
 
+.card-prop .card-body{
+  
+  padding: 0 !important;
+  padding-left: 10px !important;
+  border-left: 5px solid yellow;
+}
+
+
 .body-card-prop{
   
-  padding: 10px 0 0 10px !important;
+  padding: 10px 5px 0 10px !important;
+  width:100% !important;
+
+
+
   /* padding: 10px !important; */
   /*  
  */
 }
 
+.content-card-prop{
+  width:100% !important;
+
+}
+
 .icon-prop{
 
-  background-color: #ffde083d;
+  background-color: #ffde08dd;
   
-  border-radius: 5px;
+  border-radius: 50%;
   width: 50px ;
   height: 50px;
   margin: 0 ;
 
-  color:#ffde08;
+  color: green;
   font-size: 20px;
+
+
+
+}
+.card-repre{
+  margin-bottom: 15px;
 }
 
 
@@ -545,4 +581,25 @@ form{
 .text-prop{
   
   font-size: smaller;
+  
+}
+
+.text-correo{
+  font-size: small;
+
+}
+
+.div-correo{
+  display: block;
+}
+
+
+.input-correo{
+  width:100% !important;
+  color: green;
+  border: none !important;
+  border-bottom: 1px solid green !important;
+  outline: none !important;
+  background-color: transparent !important;
+  
 }

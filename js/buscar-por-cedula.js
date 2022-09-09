@@ -1,34 +1,7 @@
 
 let repre, comuna, estudiantes, cedula;
 
-/* 
-CED_EST
-: 
-"2400282212"
-EST_ANIO_BASICO
-: 
-1
-EST_APELLIDOS
-: 
-"PONGUILLO TOMAL&Aacute; "
-EST_CELL
-: 
-"0986105129"
-EST_CORREO
-: 
-"douglasurosales&#x40;gmail.com"
-EST_NOMBRES
-: 
-"DOUGLAS URBANO "
-INST_DESCRIP
-: 
-"Unidad Educativa Palmar"
-
-
- */
-const estudianteHtml = (est) => {
-  return ` 
-  <div class="card my-2">
+  {/* <div class="card my-2">
 
     <div class="card-body div-card">
     <ul class="list-group list-group-flush" style="width: 100%;">
@@ -40,8 +13,92 @@ const estudianteHtml = (est) => {
     </ul>
 
     </div>
-  </div>
+  </div> */}
 
+const estudianteHtml = (est) => {
+  return ` 
+  <div class="card card-repre ">
+    <div class="col-sm-12 p-3 ">
+      <h5 class="d-flex  align-items-center" >
+      <i class="bi bi-person icon-card"></i>${est.EST_APELLIDOS} ${est.EST_NOMBRES}
+      </h5>
+    </div>
+    <div class="card-body card-body-repre"> 
+    
+      <div class="row justify-content-center">
+        <div class="col-sm-6">
+          <div class="card card-prop">
+            <div class="card-body  ">
+              <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                <i class="bi bi-fingerprint"></i>
+              </div>
+              <div class="body-card-prop d-flex align-items-center">
+                <p>
+                  <b class="text-prop">CÉDULA</b><br>
+                  ${est.CED_EST}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card card-prop">
+            <div class="card-body ">
+              <div class="icon-prop d-flex justify-content-center align-items-center">
+
+              <i class="bi bi-book"></i>
+              </div>
+              <div class="body-card-prop d-flex align-items-center">
+                <p>
+                  <b class="text-prop">INSTITUCIÓN</b><br>
+                  ${est.INST_DESCRIP}
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+         
+        <div class="col-sm-6">
+          <div class="card card-prop">
+            <div class="card-body ">
+              <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                <i class="bi bi-at"></i>
+              </div>
+              <div class="body-card-prop d-flex align-items-center">
+                <p class="content-card-prop">
+                  <b class="text-prop">CORREO</b><br>
+                    <input type="text" value="${est.EST_CORREO}" class="input-correo" readonly></input>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+          
+        <div class="col-sm-6">
+          <div class="card card-prop">
+            <div class="card-body  ">
+              <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                <i class="bi bi-telephone"></i>
+              </div>
+              <div class="body-card-prop d-flex align-items-center">
+                <p>
+                  <b class="text-prop">CELULAR</b><br>
+                  ${est.EST_CELL}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+          
 `
 
 
@@ -78,8 +135,8 @@ const buscarRepresentanteAjax = () => {
       repre = data[0];
 
       const estudiantes = await obtenerDatos(`estrepre?ced=${cedula}`);
-      console.log(estudiantes);
 
+      console.log(repre)
       respComuna = await obtenerComuna(repre.ID_PARROQUIA, repre.REPRE_COMUNA);
       comuna = respComuna.COM_DESCRIP;
 
@@ -136,17 +193,17 @@ const buscarRepresentanteAjax = () => {
       </div>
     </section>
       <div class="card card-repre ">
-      <div class="col-sm-12 p-3">
-        <h5  >
-        <i class="bi bi-person"></i>${repre.REPRE_APELLIDO} ${repre.REPRE_NOMBRE}
+      <div class="col-sm-12 p-3 ">
+        <h5 class="d-flex  align-items-center" >
+        <i class="bi bi-person icon-card"></i>${repre.REPRE_APELLIDO} ${repre.REPRE_NOMBRE}
         </h5>
       </div>
-      <div class="card-body"> 
+      <div class="card-body card-body-repre"> 
       
         <div class="row justify-content-center">
           <div class="col-sm-6">
-            <div class="card ">
-              <div class="card-body card-prop ">
+            <div class="card card-prop">
+              <div class="card-body  ">
                 <div class="icon-prop d-flex justify-content-center align-items-center">
 
                   <i class="bi bi-file-person-fill"></i>
@@ -161,55 +218,79 @@ const buscarRepresentanteAjax = () => {
             </div>
 
               </div>
-              <div class="col-sm-6">
-                <div class="card card-prop">
-                  <div class="card-body div-card d-flex align-items-center">
-                  <p>
-                    <label  class="text-prop"><b>CELULAR</b> </label><br>
-                    <label>${repre.REPRE_CELL}</label>
-                  </p>
-                  </div>
+          <div class="col-sm-6">
+            <div class="card card-prop">
+              <div class="card-body ">
+                <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                <i class="bi bi-telephone"></i>
                 </div>
-              
-              
+                <div class="body-card-prop d-flex align-items-center">
+                  <p>
+                    <b class="text-prop">CELULAR</b><br>
+                    ${repre.REPRE_CELL}
+                  </p>
+                </div>
               </div>
+            </div>
+
+          </div>
+
+             
               <div class="col-sm-6">
-                <div class="card card-prop">
-                  <div class="card-body div-card">
-                    <p>
+              <div class="card card-prop">
+              <div class="card-body ">
+                <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                <i class="bi bi-map"></i>
+                </div>
+                <div class="body-card-prop d-flex align-items-center">
+                  <p>
                     <b class="text-prop">COMUNA</b><br>
                     ${comuna}
-                    </p>
-                  </div>
+                  </p>
                 </div>
-              
+              </div>
+            </div>
               </div>
               
               <div class="col-sm-6">
               <div class="card card-prop">
-                <div class="card-body div-card">
+              <div class="card-body  ">
+                <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                <i class="bi bi-building"></i>
+                </div>
+                <div class="body-card-prop d-flex align-items-center">
                   <p>
                     <b class="text-prop">BARRIO</b><br>
                     ${repre.REPRE_BARRIO}
                   </p>
                 </div>
               </div>
+            </div>
 
               </div>
               <div class="col-sm-12">
-                <div class="card card-prop">
-                  <div class="card-body div-card">
-                    <p>
-                      <b class="text-prop">DIRECCION</b><br>
-                      ${repre.REPRE_DIRECCION}
-                    </p>
-                  </div>
+              <div class="card card-prop">
+              <div class="card-body">
+                <div class="icon-prop d-flex justify-content-center align-items-center">
+
+                <i class="bi bi-geo-alt-fill"></i>
+                                </div>
+                <div class="body-card-prop d-flex align-items-center">
+                  <p>
+                    <b class="text-prop">DIRECCION</b><br>
+                    ${repre.REPRE_DIRECCION}
+                  </p>
                 </div>
               </div>
+            </div>
 
             </div>
           </div>
           
+      </div>
       </div>
               
 
@@ -231,9 +312,9 @@ const buscarRepresentanteAjax = () => {
         }
         <div class="row">
           <div class="col-12 col-sm-6">
-            <div class="card" >
-              <div class="card-header">Domicilio</div>
-              <img class="rounded" src=${image.src}
+          <div class="card" >
+          <div class="card-header">Domicilio</div>
+          <img class="rounded" src=${image.src}
               title="Domicilio"
               style="
               object-fit:contain;
