@@ -1,4 +1,42 @@
 
+
+getFecha = () => {
+  const fecha = new Date();
+
+  var options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  return fecha.toLocaleDateString("es-MX", options); // Saturday, September 17, 2016
+
+
+}
+
+getBase64ImageFromURL = (url) => {
+  return new Promise((resolve, reject) => {
+    var img = new Image();
+    img.setAttribute("crossOrigin", "anonymous");
+
+    img.onload = () => {
+      var canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+
+      var dataURL = canvas.toDataURL("image/png");
+
+      resolve(dataURL);
+    };
+
+    img.onerror = error => {
+      reject(error);
+    };
+
+    img.src = url;
+  });
+}
+
+
 function buildTableBody(data, columns) {
   var body = [];
 
@@ -90,33 +128,70 @@ generarPdf = (representantes, institucion) => {
 
 
 
-generarPdfEstudiantes = (estudiantes, representante, comuna, cedula) => {
+generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
 
   console.log(representante, estudiantes);
 
+  fecha = getFecha();
 
   var dd = {
     content: [
-      { text: representante.REPRE_NOMBRE + " " + representante.REPRE_APELLIDO, style: 'header', alignment: 'center', },
+      {
+        image: await getBase64ImageFromURL('../img/logo.jpg'),
+        width: 150
+      },
+      {
+        text: 'Santa Elena, ' + fecha,
+        style: 'fecha',
+        margin: [0, 15, 0, 15]
+
+      },{
+        text: 'Informe de representante',
+        style: 'header',
+        alignment: 'center',
+        margin: [0, 15, 0, 15]
+
+      },
+
+
+      { 
+        text: representante.REPRE_NOMBRE + " " + representante.REPRE_APELLIDO, 
+        alignment: 'center'
+      
+      },
       {
 
         text: `Cedula: ${cedula}`,
       },
       {
+        columns: [
+          {
+            width: 90,
+            text: 'Cedula'
+          },
+          {
+            width: '*',
+            text: `${comuna}`
+          }
+        ]
+      },
 
-        text: `Comuna: ${comuna}`,
+
+      {
+
+        text: `\nComuna: ${comuna}`,
       },
       {
 
-        text: `Barrio: ${representante.REPRE_BARRIO}`,
+        text: `\nBarrio: ${representante.REPRE_BARRIO}`,
       },
       {
 
-        text: `Direccion: ${representante.REPRE_DIRECCION}`,
+        text: `\nDireccion: ${representante.REPRE_DIRECCION}`,
       },
       {
 
-        text: `Estudiantes registrados: ${estudiantes.length}`,
+        text: `\nEstudiantes registrados: ${estudiantes.length}`,
         margin: [0, 0, 0, 15]
       },
 
@@ -161,7 +236,7 @@ generarPdfEstudiantes = (estudiantes, representante, comuna, cedula) => {
     ,
     styles: {
       header: {
-        fontSize: 18,
+        fontSize: 16,
         bold: true,
 
       },
@@ -182,6 +257,9 @@ generarPdfEstudiantes = (estudiantes, representante, comuna, cedula) => {
         fillColor: '#11E869'
 
 
+      },
+      fecha: {
+        alignment: 'right'
       }
     }
   }

@@ -195,6 +195,7 @@ const mostrarInstituciones = async (idParroquia) => {
   accordionInstituciones.innerHTML = cargando;
 
   const data = await obtenerDatos(`parrinst?parroquia=${idParroquia}`);
+  console.log(data)
 
   if (!data) {
     accordionInstituciones.innerHTML = alertaHtml('No se han registrado instituciones');

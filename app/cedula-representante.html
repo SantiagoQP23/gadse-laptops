@@ -10,8 +10,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="./../css/style.css">
-  <link rel="stylesheet" href="./../css/style_ind.css">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -19,6 +17,11 @@
 
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+
+  <link rel="stylesheet" href="./../css/style.css">
+  <link rel="stylesheet" href="./../css/style_ind.css">
+  <link rel="stylesheet" href="./../css/cedula-representante.css">
 
 
   <title>Reportes de registro</title>
@@ -36,7 +39,7 @@
           <!--<span>Registro V1.0</span>-->
         </a>
       </h3>
-      <label for="sidebar-toogle" class="fas fa-bars"></span>
+      <label for="sidebar-toogle" class="fas fa-bars"></label>
     </div>
     <div class="sidebar-menu">
 
@@ -49,7 +52,7 @@
     <div class="modal-dialog modal-fullscreen " role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="tituloModalDomicilio">Modal title</h5>
+          <h5 class="modal-title" id="tituloModalDomicilio">Domicilio</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -68,7 +71,7 @@
     <div class="modal-dialog modal-fullscreen" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="tituloModalDomicilio">Modal title</h5>
+          <h5 class="modal-title" id="tituloModalCroquis">Croquis</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -85,6 +88,11 @@
 
   <div class="main-content">
 
+    <div class="spinner-div" id="spinner" style="display: none;">
+      <div></div>
+      <div></div>
+    </div>
+
     <main>
       <!--Formulario de consulta-->
       <div class="bannerh">
@@ -94,45 +102,70 @@
         <div class="container">
           <div class="row">
             <div class="col-lg-9">
-              <h5 class="font-weight-bold mb-0">Consulta de representantes</h5>
+              <h5 class="font-weight-bold mb-0"><b>Consulta de registros</b></h5>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <label for="select" class="text-center">Buscar por: </label>
+      <section class="d-flex justify-content-center">
+
+        <div class="wrapper ">
+
+          <input type="radio" name="select" onclick="handleClick(this)" id="option-1" value="1" checked>
+          <label for="option-1" class="option option-1">
+            <div class="dot"></div>
+            <span>Representante</span>
+          </label>
+
+          <input type="radio" name="select" onclick="handleClick(this)" id="option-2" value="2">
+          <label for="option-2" class="option option-2">
+            <div class="dot"></div>
+            <span>Estudiante</span>
+          </label>
+        </div>
+
+      </section>
+
+      <form class="d-flex justify-content-center form-buscar">
+
+        <div class="col-sm-6">
+          <div class="input-group">
+            <input type="text" id="cedula" name="cedula" class="form-control " placeholder="Número de cedula"
+            onkeypress="return valideKey(event);"
+              >
+            <div>
+              <button id="btn-buscar" class="btn btn-success ml-3 btn-buscar">Buscar</button>
             </div>
           </div>
         </div>
 
 
 
-        <form>
-          <label for="cedula">Buscar por número de cédula</label>
-          <div class="input-group mb-3">
-            <input type="number" id="cedula" name="cedula" class="form-control"
-              placeholder="Ingrese el numero de cedula" aria-label="Recipient's username"
-              aria-describedby="button-addon2">
-            <div class="input-group-append">
-              <button onclick="buscarRepresentante()" id="btn-buscar" class="btn btn-warning">Buscar</button>
-            </div>
-          </div>
-        </form>
+      </form>
 
-        <div class="d-flex justify-content-center">
-
-          <div id="cargando-representante" class=" ocultar">
-            <div class="spinner-grow text-warning" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-grow text-warning" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-            <div class="spinner-grow text-warning" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-
-          </div>
+      <section class="py-3 border-bottom" style="margin-bottom:15px !important">
+        <div class="container d-flex justify-content-between">
+          <h5 class="font-weight-bold mb-0 tit-2" ><b id="titulo-datos">Datos del representante</b></h5>
+          <button class="btn btn-success" id="pdf-representante" ><i class="bi bi-filetype-pdf"></i>
+          </button>
         </div>
+      </section>
+
+      <section id="datos-representante" >
 
 
-        <section id="datos-representante">
-  
-        </section>
+        
+
+      </section>
+
+      <section id="datos-estudiante" class="ocultar">
+        
+      </section>
+
+      
 
 
 
@@ -145,13 +178,26 @@
       // code is the decimal ASCII representation of the pressed key.
       var code = (evt.which) ? evt.which : evt.keyCode;
 
-      if (code == 8) { // backspace.
+      const cedula = document.querySelector('#cedula').value;
+
+      if (cedula.length > 9 ) {
+        return false;
+      } else if (code === 13) {
+        return buscar();
+      }
+
+
+
+      /* if (code == 8) { // backspace.
         return true;
       } else if (code >= 48 && code <= 57) { // is a number.
         return true;
-      } else { // other keys.
+        } 
+      }
+      else { // other keys.
         return false;
       }
+       */
     };
 
 
@@ -178,6 +224,7 @@
 
   <script type="text/javascript" charset="utf8"
     src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!--Scrip para graficos-->
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script> -->
