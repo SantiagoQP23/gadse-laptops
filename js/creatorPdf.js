@@ -134,90 +134,318 @@ generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
 
   fecha = getFecha();
 
-  var dd = {
+  var dd = '';
+
+  dd = {
+    footer: function(currentPage, pageCount, pageSize) {
+      // you can apply any logic and return any valid pdfmake element
+  
+      return [{
+        columns: [
+          { text: 'Santa Elena, ' + fecha, alignment: 'left' },
+          { text: currentPage, alignment: 'right' },
+        ],
+        margin: [20, 0, 20, 15]
+      },
+      ]
+    },
+
     content: [
-      {
-        image: await getBase64ImageFromURL('../img/logo.jpg'),
-        width: 150
-      },
-      {
-        text: 'Santa Elena, ' + fecha,
-        style: 'fecha',
-        margin: [0, 15, 0, 15]
 
-      },{
-        text: 'Informe de representante',
-        style: 'header',
-        alignment: 'center',
-        margin: [0, 15, 0, 15]
-
-      },
-
-
-      { 
-        text: representante.REPRE_NOMBRE + " " + representante.REPRE_APELLIDO, 
-        alignment: 'center'
-      
-      },
-      {
-
-        text: `Cedula: ${cedula}`,
-      },
       {
         columns: [
+          [
+            { 
+              columns: [
+                {
+                  image: await getBase64ImageFromURL('../img/laptop-1.jpg'),
+                  width: 120,
+                  height: 100,
+                },
+               {
+                  text: 'REGISTRO DE ENTREGA DE LAPTOP',
+                  style: 'header',
+                  alignment: 'center',
+                  margin: [0, 30, 0, 15]
+                  
+                },
+                
+              ]
+              
+            },
+
+            {
+              canvas: [
+                { type: 'line', x1: 0, y1: 0, x2: 510, y2: 0, lineWidth: 1 }, //Up line
+                
+              ],
+              margin: [0, 10]
+            },
+
+            
+            {
+              text: representante.REPRE_NOMBRE + " " + representante.REPRE_APELLIDO,
+              alignment: 'center',
+              style: 'subheader',
+              margin: [0, 15, 0, 0]
+      
+            },
+            {
+              columns: [
+                {
+                  width: 90,
+                  text: 'Cédula',
+                },
+                {
+                  width: '*',
+                  text: `${cedula}`
+                }
+              ],
+              margin: [0, 15, 0, 10],
+              style: 'prop'
+            },
+            {
+              columns: [
+                {
+                  width: 90,
+                  text: 'Comuna',
+                },
+                {
+                  width: '*',
+                  text: `${comuna}`
+                }
+              ],
+              margin: [0, 0, 0, 10],
+              style: 'prop'
+              
+            },
+            {
+              columns: [
+                {
+                  width: 90,
+                  text: 'Barrio',
+                  style: 'prop'
+                },
+                {
+                  width: '*',
+                  text: `${representante.REPRE_BARRIO}`
+                }
+              ],
+              margin: [0, 0, 0, 10]
+      
+            },
+            {
+              columns: [
+                {
+                  width: 90,
+                  text: 'Direccion',
+                  style: 'prop'
+                },
+                {
+                  width: '*',
+                  text: `${representante.REPRE_DIRECCION}`
+                }
+              ],
+              margin: [0, 0, 0, 10]
+      
+            },
+            {
+              columns: [
+                {
+                  width: 90,
+                  text: 'Celular',
+                  style: 'prop'
+                },
+                {
+                  width: '*',
+                  text: `${representante.REPRE_CELL}`
+                }
+              ],
+              margin: [0, 0, 0, 10]
+      
+            },
+            {
+              columns: [
+                {
+                  width: 90,
+                  text: 'Estudiantes',
+                  style: 'prop'
+                },
+                {
+                  width: '*',
+                  text: `${estudiantes.length}`
+                }
+              ],
+              margin: [0, 0, 0, 10]
+      
+            },
+      
+            {
+      
+              text: "Estudiantes", style: 'subheader',
+              margin: [0, 15, 0, 15],
+              alignment: 'center'
+      
+            },
+      
+
+
+
+
+          ],
+          /*    type: 'rect',
+     x: 15,
+    y: 0, //could be negative to account for padding
+    w: 30,
+    h: 15,
+   */
           {
-            width: 90,
-            text: 'Cedula'
+            width: 10,
+            canvas: [
+              // { type: 'rect', x1: 0, y1: -80, x2: 0, y2: 150, color: 'green', lineWidth: 12}, //Up line
+              {type: 'rect', x: 10, y: -80, w: 15, h: 200, color: 'green'},
+              {type: 'rect', x: 10, y: 120, w: 15, h: 200, color: 'yellow'}
+            ],
+
           },
-          {
-            width: '*',
-            text: `${comuna}`
-          }
         ]
       },
 
 
-      {
 
-        text: `\nComuna: ${comuna}`,
-      },
-      {
 
-        text: `\nBarrio: ${representante.REPRE_BARRIO}`,
-      },
-      {
+     
 
-        text: `\nDireccion: ${representante.REPRE_DIRECCION}`,
-      },
-      {
 
-        text: `\nEstudiantes registrados: ${estudiantes.length}`,
-        margin: [0, 0, 0, 15]
-      },
+      estudiantes.map(function (est) {
+        return [
 
-      {
+          {
+            columns: [
+              {
+                width: 90,
+                text: 'Nombres',
+              },
+              {
+                width: '*',
+                text: `${est.EST_APELLIDOS} ${est.EST_NOMBRES}`,
+                
+              }
+            ],
+            margin: [0, 0, 0, 10],
+            style: 'prop'
 
-        text: "Estudiantes", style: 'subheader',
-      },
-      estudiantes.map(function (item) {
-        return [{ text: "Nombres: " + item.EST_NOMBRES + " " + item.EST_APELLIDOS },
-        { text: "Cédula: " + item.CED_EST },
-        { text: "Celular: " + item.EST_CELL },
-        { text: "Correo: " + item.EST_CORREO.replace('&#x40;', '@') },
-        {
-          text: "Institución: " + item.INST_DESCRIP,
-          margin: [0, 0, 0, 15]
+          },
+          
+          {
+            columns: [
+              {
+                width: 90,
+                text: 'Cédula',
+              },
+              {
+                width: '*',
+                text: `${est.CED_EST}`
+              }
+            ],
+            margin: [0, 0, 0, 10],
+            style: 'prop'
+            
+          },
+          {
+            columns: [
+              {
+                width: 90,
+                text: 'Institución',
+                style: 'prop'
+              },
+              {
+                width: '*',
+                text: `${est.INST_DESCRIP}`
+              }
+            ],
+            margin: [0, 0, 0, 10],
+            style: 'prop'
+            
+          },
+          {
+            columns: [
+              {
+                width: 90,
+                text: 'Curso',
+                style: 'prop'
+              },
+              {
+                width: '*',
+                text: `${est.EST_ANIO_BASICO}° de Bachillerato`
+              }
+            ],
+            margin: [0, 0, 0, 10]
+            
+          },
+          {
+            columns: [
+              {
+                width: 90,
+                text: 'Correo',
+                style: 'prop'
+              },
+              {
+                width: '*',
+                text: `${est.EST_CORREO.replace('&#x40;', '@')}`
+              }
+            ],
+            margin: [0, 0, 0, 10]
+            
+          },
+          {
+            columns: [
+              {
+                width: 90,
+                text: 'Celular',
+                style: 'prop'
+              },
+              {
+                width: '*',
+                text: `${est.EST_CELL}`
+              }
+            ],
+            margin: [0, 0, 0, 25]
 
-        }]
+          },
+          
+          
+          
+
+ 
+
+        ]
+
       }),
+
+      {
+        pageBreak: 'before',
+        text: 'Domicilio',
+        style: 'subheader',
+        alignment: 'center'
+      },
+
+
+
+
 
       {
         // if you specify both width and height - image will be stretched
         image: representante.REPRE_FOT_DOM,
-        fit: [500, 500],
-        pageBreak: 'after',
+        fit: [500, 800],
+
         alignment: 'center'
 
+      },
+      {
+        text: 'Croquis',
+        style: 'subheader',
+        alignment: 'center'
       },
       {
         image: representante.REPRE_FOT_CRO,
@@ -236,8 +464,9 @@ generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
     ,
     styles: {
       header: {
-        fontSize: 16,
+        fontSize: 17,
         bold: true,
+        border: true
 
       },
       subheader: {
@@ -260,7 +489,11 @@ generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
       },
       fecha: {
         alignment: 'right'
-      }
+      },
+      prop: {
+        bold: true
+      },
+
     }
   }
   pdfMake.createPdf(dd).open();

@@ -258,6 +258,7 @@ const estudianteHtml = (est) => {
 }
 
 var currentValue = 0;
+
 function handleClick(myRadio) {
 
   if (currentValue === myRadio.value) return;
@@ -267,14 +268,19 @@ function handleClick(myRadio) {
 
   if (myRadio.value === '1') {
     document.querySelector('#titulo-datos').innerHTML = 'Datos del representante';
-
+    
     document.querySelector('#datos-estudiante').classList.add('ocultar');
+    document.getElementById("pdf-representante").toggleAttribute('disabled')
+
+
+    document.getElementById('pdf-representante').classList.remove('ocultar')
     document.querySelector('#datos-representante').classList.remove('ocultar');
-    document.querySelector('#datos-representante').innerHTML = representanteHtml(initialRepresentante, '-','-');
+    document.querySelector('#datos-representante').innerHTML = representanteHtml(initialRepresentante, '-', '-');
 
   } else {
 
     document.querySelector('#titulo-datos').innerHTML = 'Datos del estudiante';
+    document.getElementById('pdf-representante').classList.add('ocultar')
 
     document.querySelector('#datos-representante').classList.add('ocultar');
     document.querySelector('#datos-estudiante').classList.remove('ocultar');
@@ -290,9 +296,9 @@ function handleClick(myRadio) {
 const buscar = () => {
 
 
-  const cedula = document.querySelector('#cedula').value;
+   cedula = document.querySelector('#cedula').value;
 
-  if (cedula.length !== 10 && cedula.length !== 9) {
+  if (cedula.length !== 10 && cedula.length !== 9 && cedula.length !== 8 ) {
 
     Swal.fire({
       icon: 'info',
@@ -380,7 +386,7 @@ const buscarRepresentanteAjax = (cedula) => {
 
       repre = data[0];
 
-      const estudiantes = await obtenerDatos(`estrepre?ced=${cedula}`);
+    estudiantes = await obtenerDatos(`estrepre?ced=${cedula}`);
 
       console.log(repre)
 
@@ -424,6 +430,7 @@ const buscarRepresentanteAjax = (cedula) => {
       >
       `
       document.getElementById("spinner").style.display = "none";
+      document.getElementById("pdf-representante").removeAttribute('disabled')
 
 
       let htmlEstudiantes = '';
@@ -509,14 +516,7 @@ const buscarRepresentanteAjax = (cedula) => {
       seccionDatos.innerHTML = cardRepresentante;
 
       // Boton para generar pdf
-      const btnGenerarPdf = document.querySelector(`#pdf-representante`);
 
-
-      btnGenerarPdf.addEventListener('click', function () {
-
-        generarPdfEstudiantes(estudiantes, repre, comuna, cedula);
-
-      });
 
 
 
@@ -560,6 +560,15 @@ document.body.onload = async function () {
 
 
 
+
+  });
+
+  const btnGenerarPdf = document.querySelector(`#pdf-representante`);
+
+
+  btnGenerarPdf.addEventListener('click', function () {
+
+    generarPdfEstudiantes(estudiantes, repre, comuna, cedula);
 
   });
 

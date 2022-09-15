@@ -134,7 +134,7 @@
         <div class="col-sm-6">
           <div class="input-group">
             <input type="text" id="cedula" name="cedula" class="form-control " placeholder="Número de cedula"
-            onkeypress="return valideKey(event);"
+              maxlength="10"
               >
             <div>
               <button id="btn-buscar" class="btn btn-success ml-3 btn-buscar">Buscar</button>
@@ -149,7 +149,7 @@
       <section class="py-3 border-bottom" style="margin-bottom:15px !important">
         <div class="container d-flex justify-content-between">
           <h5 class="font-weight-bold mb-0 tit-2" ><b id="titulo-datos">Datos del representante</b></h5>
-          <button class="btn btn-success" id="pdf-representante" ><i class="bi bi-filetype-pdf"></i>
+          <button class="btn btn-success" id="pdf-representante" disabled><i class="bi bi-filetype-pdf"></i>
           </button>
         </div>
       </section>
