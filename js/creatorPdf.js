@@ -128,7 +128,7 @@ generarPdf = (representantes, institucion) => {
 
 
 
-generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
+generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula, parroquia) => {
 
   console.log(representante, estudiantes);
 
@@ -160,7 +160,7 @@ generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
                 {
                   image: await getBase64ImageFromURL('../img/laptop-1.jpg'),
                   width: 120,
-                  height: 100,
+                  height: 80,
                 },
                {
                   text: 'REGISTRO DE ENTREGA DE LAPTOP',
@@ -203,6 +203,21 @@ generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
               ],
               margin: [0, 15, 0, 10],
               style: 'prop'
+            },
+            {
+              columns: [
+                {
+                  width: 90,
+                  text: 'Parroquia',
+                },
+                {
+                  width: '*',
+                  text: `${parroquia}`
+                }
+              ],
+              margin: [0, 0, 0, 10],
+              style: 'prop'
+              
             },
             {
               columns: [
@@ -427,7 +442,8 @@ generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
         pageBreak: 'before',
         text: 'Domicilio',
         style: 'subheader',
-        alignment: 'center'
+        alignment: 'center',
+        margin: [0, 0, 0, 10]
       },
 
 
@@ -445,7 +461,8 @@ generarPdfEstudiantes = async (estudiantes, representante, comuna, cedula) => {
       {
         text: 'Croquis',
         style: 'subheader',
-        alignment: 'center'
+        alignment: 'center',
+        margin: [0, 20, 0, 10]
       },
       {
         image: representante.REPRE_FOT_CRO,

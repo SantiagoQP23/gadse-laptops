@@ -1,20 +1,32 @@
 
-let repre, comuna = '', estudiantes, cedula;
+let repre, comuna = '', estudiantes, cedula, valueRadio, parroquia;
+const parroquias = [];
 
-{/* <div class="card my-2">
 
-    <div class="card-body div-card">
-    <ul class="list-group list-group-flush" style="width: 100%;">
-      <li class=""><b> ${est.EST_APELLIDOS + " " + est.EST_NOMBRES}</b></li>
-      <li class=""><b>Cédula:      </b> ${"      " + est.CED_EST}</li>
-      <li class=""><b>Institución: </b> ${est.INST_DESCRIP}</li>
-      <li class=""><b>Correo:      </b> ${est.EST_CORREO}</li>
-      <li class=""><b>Celular:     </b> ${est.EST_CELL}</li>
-    </ul>
+const cargarParroquias = async () => {
+  const cantones = await obtenerDatos('cantones');
 
-    </div>
-  </div> */}
 
+  cantones.forEach(async canton => {
+    const data = await obtenerDatos(`parroquias?canton=${canton.ID_CANTON}`);
+    
+
+    data.forEach(parroquia => {
+      parroquias.push(parroquia);
+    })
+  })
+
+
+
+
+}
+
+const obtenerParroquia = async (idParroquia) => {
+  const parroquia = parroquias.find(com => com.ID_PARROQUIA === idParroquia);
+
+  return parroquia.PARR_DESCRIP;
+
+}
 
 const initialRepresentante = {
   REPRE_APELLIDO: 'Apellidos',
@@ -32,11 +44,11 @@ const initialEstudiante = {
   EST_CELL: '-',
   EST_ANIO_BASICO: '-',
   EST_CORREO: '-',
-  INST_DESCRIP: '-'
+  INST_DESCRIP: '-',
+  PARR_DESCRIP: '-'
 }
 
-
-const representanteHtml = (repre, cedula, comuna) => {
+const representanteHtml = (repre, cedula, comuna, parroquia) => {
 
   return `
   <div class="card card-repre ">
@@ -81,9 +93,26 @@ const representanteHtml = (repre, cedula, comuna) => {
           </div>
         </div>
 
+        </div>
+        
+        
+        <div class="col-sm-6">
+        <div class="card card-prop">
+        <div class="card-body ">
+          <div class="icon-prop d-flex justify-content-center align-items-center">
+  
+          <i class="bi bi-geo"></i>
+          </div>
+          <div class="body-card-prop d-flex align-items-center">
+            <p>
+              <b class="text-prop">PARROQUIA</b><br>
+              ${parroquia}
+            </p>
+          </div>
+        </div>
       </div>
-
-         
+        </div>
+        
           <div class="col-sm-6">
           <div class="card card-prop">
           <div class="card-body ">
@@ -99,8 +128,9 @@ const representanteHtml = (repre, cedula, comuna) => {
             </div>
           </div>
         </div>
-          </div>
-          
+        </div>
+
+         
           <div class="col-sm-6">
           <div class="card card-prop">
           <div class="card-body  ">
@@ -118,7 +148,7 @@ const representanteHtml = (repre, cedula, comuna) => {
         </div>
 
           </div>
-          <div class="col-sm-12">
+          <div class="col-sm-6">
           <div class="card card-prop">
           <div class="card-body">
             <div class="icon-prop d-flex justify-content-center align-items-center">
@@ -142,9 +172,6 @@ const representanteHtml = (repre, cedula, comuna) => {
 
 
 }
-
-
-
 
 const estudianteHtml = (est) => {
   return ` 
@@ -189,6 +216,31 @@ const estudianteHtml = (est) => {
             </div>
           </div>
         </div>
+
+        ${
+          est.PARR_DESCRIP
+          ? `
+          <div class="col-sm-6">
+            <div class="card card-prop">
+              <div class="card-body ">
+                <div class="icon-prop d-flex justify-content-center align-items-center">
+  
+                <i class="bi bi-geo"></i>
+                </div>
+                <div class="body-card-prop d-flex align-items-center">
+                  <p>
+                    <b class="text-prop">PARROQUIA DE LA INSTITUCIÓN</b><br>
+                    ${est.PARR_DESCRIP }
+                  </p>
+                </div>
+              </div>
+            </div>
+  
+          </div>
+          
+          `
+          : ' '
+        }
 
         <div class="col-sm-6">
           <div class="card card-prop">
@@ -257,25 +309,22 @@ const estudianteHtml = (est) => {
 
 }
 
-var currentValue = 0;
-
 function handleClick(myRadio) {
 
-  if (currentValue === myRadio.value) return;
+  if (valueRadio === myRadio.value) return;
 
-  console.log(myRadio.value)
   document.querySelector('#cedula').value = '';
 
   if (myRadio.value === '1') {
     document.querySelector('#titulo-datos').innerHTML = 'Datos del representante';
-    
+
     document.querySelector('#datos-estudiante').classList.add('ocultar');
     document.getElementById("pdf-representante").toggleAttribute('disabled')
 
 
     document.getElementById('pdf-representante').classList.remove('ocultar')
     document.querySelector('#datos-representante').classList.remove('ocultar');
-    document.querySelector('#datos-representante').innerHTML = representanteHtml(initialRepresentante, '-', '-');
+    document.querySelector('#datos-representante').innerHTML = representanteHtml(initialRepresentante, '-', '-', '-');
 
   } else {
 
@@ -288,17 +337,15 @@ function handleClick(myRadio) {
 
   }
 
-  currentValue = myRadio.value;
+  valueRadio = myRadio.value;
 }
-
-
 
 const buscar = () => {
 
 
-   cedula = document.querySelector('#cedula').value;
+  cedula = document.querySelector('#cedula').value;
 
-  if (cedula.length !== 10 && cedula.length !== 9 && cedula.length !== 8 ) {
+  if (cedula.length !== 10 && cedula.length !== 9 && cedula.length !== 8) {
 
     Swal.fire({
       icon: 'info',
@@ -341,13 +388,11 @@ const buscarEstudiante = (cedula) => {
     async: true,
     success: async function (data) {
 
-      console.log(data);
+      // console.log(data[0]);
       document.getElementById("spinner").style.display = "none";
 
       seccionDatos.innerHTML = '';
       seccionDatos.innerHTML = estudianteHtml(data[0]);
-
-
 
     },
     error: function () {
@@ -386,10 +431,11 @@ const buscarRepresentanteAjax = (cedula) => {
 
       repre = data[0];
 
-    estudiantes = await obtenerDatos(`estrepre?ced=${cedula}`);
+      parroquia = await obtenerParroquia(repre.ID_PARROQUIA);
 
-      console.log(repre)
+      estudiantes = await obtenerDatos(`estrepre?ced=${cedula}`);
 
+      // console.log(estudiantes)
       if (repre.REPRE_COMUNA !== '0') {
         respComuna = await obtenerComuna(repre.ID_PARROQUIA, repre.REPRE_COMUNA);
         comuna = respComuna.COM_DESCRIP;
@@ -441,7 +487,7 @@ const buscarRepresentanteAjax = (cedula) => {
 
 
       // Añadir la información del representante en el card
-      let cardRepresentante = representanteHtml(repre, cedula, comuna);
+      let cardRepresentante = representanteHtml(repre, cedula, comuna, parroquia);
 
 
 
@@ -540,41 +586,27 @@ const buscarRepresentanteAjax = (cedula) => {
 
 }
 
-
-
 document.body.onload = async function () {
 
   mostrarCantones();
-  document.querySelector('#datos-representante').innerHTML = representanteHtml(initialRepresentante, '-', '-');
-
-
+  cargarParroquias();
+  document.querySelector('#datos-representante').innerHTML = representanteHtml(initialRepresentante, '-', '-', '-');
 
   document.querySelector('#btn-buscar').addEventListener("click", async function (event) {
-
-
 
     event.preventDefault();
     event.stopImmediatePropagation();
     buscar();
 
-
-
-
-
   });
 
   const btnGenerarPdf = document.querySelector(`#pdf-representante`);
 
-
   btnGenerarPdf.addEventListener('click', function () {
 
-    generarPdfEstudiantes(estudiantes, repre, comuna, cedula);
+    generarPdfEstudiantes(estudiantes, repre, comuna, cedula, parroquia);
 
   });
-
-
-
-
 
 }
 

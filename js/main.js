@@ -1,40 +1,5 @@
 const BASE_URL = 'http://128.201.163.185:8080/wsRegistro/api/v1/services/';
 
-
-/* 
-  .then(function (response) {
-            return response.arrayBuffer();
-        })
-        .then(function (buffer) {
-            const decoder = new TextDecoder('iso-8859-1');
-            const text = decoder.decode(buffer);
-            console.log(text);
-            */
-
-// const obtenerDatos = async (url) => {
-//   try {
-//     const resp = await fetch(BASE_URL + url, {
-//       headers: {
-//         //'Accept': 'application/json',
-//         //'Content-Type': 'application/json'
-//         //'Content-Type': 'json',
-//         'Content-Type': 'application/x-www-form-urlencoded',
-//         //'Content-Type': 'text/plain; charset=ISO-8859-1',
-//       }
-
-//     }
-//     );
-
-//     const body = resp.json();    
-
-
-
-//     return body;
-//   } catch (error) {
-//     return false;
-//   }
-// }
-
 const obtenerDatos = async (url) => {
   const data = $.ajax({
     type: "GET",
@@ -46,26 +11,6 @@ const obtenerDatos = async (url) => {
 
     },
    
-  });
-  return data;
-}
-const obtenerDatosAjax = async (url) => {
-  const data = $.ajax({
-    type: "GET",
-    url: BASE_URL + url,
-    contentType: "application/x-www-form-urlencoded;charset=ISO-8859-15",
-    //contentType: 'application/xml;charset=ISO-8859-1',
-    dataType: "json",
-    success: function (data) {
-      return data;
-
-    },
-    error: function (data) {
-      //alert('error');
-    },
-    complete: function () {
-
-    }
   });
   return data;
 }
@@ -87,10 +32,6 @@ const abrirImagen = (imagen) => {
 
 
 }
-
-
-
-
 
 const mostrarCantones = async () => {
 
@@ -158,12 +99,13 @@ const mostrarComunas = async (idParroquia) => {
 
 
 }
+
 const obtenerComuna = async (idParroquia, idComuna) => {
   const comunas = await obtenerDatos(`comunas?parroquia=${idParroquia}`);
 
-  console.log(comunas);
+  // console.log(comunas);
   const comuna = comunas.find(com => com.ID_COMUNA === idComuna);
-  console.log(comuna)
+  // console.log(comuna)
   return comuna;
 }
 
@@ -254,8 +196,6 @@ const mostrarInstituciones = async (idParroquia) => {
 
 
 }
-
-
 
 
 const mostrarRepresentantes = async (idInstitucion, institucion) => {
